@@ -1,0 +1,74 @@
+@charset "utf-8";
+
+a { text-decoration: none; }
+
+/* colours */
+html { min-height: 100%; background: #ffef; }
+body { color: #000; min-height: 100%; }
+a { color: #c03; }
+.footnoteReference { color: inherit; border-bottom: 1px solid #ccc; cursor: default; }
+a:visited { color: #903; }
+#breadcrumbs a:visited:after, #languages a:visited:after, #meta a:visited:after { content:''; }
+
+/* typography */
+body { font: 18px/28px 'Alegreya', garamond, georgia, serif; }
+em { font-family: 'Alegreya', garamond, georgia, serif; font-style: italic; }
+.footnotes, .home #teaser .footnotes { font-size: 16px; line-height: 28px }
+.footnoteReference { font-size: inherit; }
+.caps { font-family: 'Alegreya SC', garamond, georgia, serif; text-transform: lowercase; letter-spacing: 1px; }
+p+p { text-indent: 28px; }
+.right { text-align: right; }
+body.poem #text { white-space: nowrap; }
+.overline { text-decoration: overline; }
+ol li { display: list-item; list-style-type: decimal; padding-bottom: 12px; }
+
+h1 { font-size: 32px; margin-bottom: 10px; margin-top: 10px }
+h2 { font-size: 26px; margin-top: 52px; margin-bottom: 10px; }
+
+.translation, .nothing { color: #ccc; }
+
+/* layout */
+body { margin: 24px 10% 10% 30%; }
+
+#side, #breadcrumbs { position: fixed; top: 24px; left: 24px; }
+#languages { position: fixed; bottom: 24px; left: 24px; }
+#meta { margin-top: 60px; font-size: 16px; }
+#meta li { display: block; float: left; margin-right: 24px }
+
+#sections { margin-top: 56px; }
+#sections h2 { margin-top: 10px }
+
+.home h1 { font-size: 42px; line-height: 36px; margin: 0; padding: 0; color: #ccc }
+
+.home #teaser { margin: 100px 0; }
+.home #teaser div { height: 256px; overflow: hidden; font-size: 24px; line-height: 36px }
+
+/* footnotes */
+.footnotes li { display: none; white-space: normal; }
+.footnotes li.active { display: block; position: absolute; right: 24px; width: 20%; margin-top: 24px; }
+.footnotes .footnoteReference { }
+
+/* next poem link */
+#next { margin-top: 1em; }
+
+/* breadcrumbs */
+#breadcrumbs { width: 26%; text-overflow: ellipsis; overflow: hidden; }
+#breadcrumbs .poems { list-style-type: none; margin-left: 24px; font-size: 16px; white-space: nowrap; }
+#breadcrumbs .current a { color: #000; }
+.arrow { /* font-weight: bold; */ font-size: 16px; line-height: 24px; width: 22px; float: left; margin-left: -24px; text-align: right; }
+
+/* languages */
+#languages .current a { color: #000; }
+
+.unavailable>a, #languages .unavailable>a { color: #999; }
+.highlighted>a { font-size: 150%; }
+
+/* notices */
+.notice { color: #069; /* font-weight: bold; */ padding: 12px 0px; width: 50%; }
+
+#description { font-size: 120%; padding: 12px 0px; }
+hr { display: none; }
+
+#portrait { width: 148px; height: 221px; margin: 0 18px 24px 0; float: left; position: relative; top: 5px; left: 1px; border: 1px solid #666; -webkit-box-shadow: 0px 2px 3px #999; }
+
+#audioplayer { height: 26px; }
