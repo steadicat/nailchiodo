@@ -72,4 +72,31 @@ hr { display: none; }
 
 #portrait { width: 148px; height: 221px; margin: 0 18px 24px 0; float: left; position: relative; top: 5px; left: 1px; border: 1px solid #666; -webkit-box-shadow: 0px 2px 3px #999; }
 
-#audioplayer { height: 26px; }
+/* audio */
+.bb-play {
+  background: #eee;
+  border-radius: 40px;
+  cursor: pointer;
+  text-align: center;
+  display: block;
+  width: 38px;
+  height: 38px;
+  margin: 20px 0;
+}
+.bb-play .play, .bb-play .pause {
+  width: 20px;
+  height: 20px;
+  margin: 9px;
+}
+.bb-trackTime, .bb-trackLength, .bb-trackTitle {
+  display: none;
+}
+.bb-play .pause {
+  display: none;
+}
+.bb-playing .play {
+  display: none;
+}
+.bb-playing .pause {
+  display: inline;
+}

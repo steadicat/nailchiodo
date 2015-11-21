@@ -4,3 +4,4 @@ body { margin: 24px 10% 10% 20%; }
 .footnotes .footnoteReference { font-size: 12px; }
 .footnotes li { display: block; margin-top: 1em; font-size: 12px; line-height: 20px }
 .footnotes li.active { position: relative; top: 0; left: 0; width: auto; margin-top: 1em; }
+.bbplayer { display: none; }

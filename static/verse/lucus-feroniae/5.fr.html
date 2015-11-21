@@ -82,12 +82,26 @@
 <h1>Canto <span class="caps">V</span></h1>
 
 
-<div id="audioplayer"></div>
-<script type="text/javascript" src="/media/scripts/audio-player.js"></script>
-<script type="text/javascript">
-AudioPlayer.setup('/media/audio/player.swf', { width: 290, bg: 'eeeeee', track: 'eeeeee', voltrack: 'ffffff', leftbg: 'eeeeee', border: 'eeeeee', rightbg: 'eeeeee', lefticonhover: 'cccccc', rightbghover: '990033' });
-AudioPlayer.embed("audioplayer", { soundFile: "/media/audio/verse/Canto_V.mp3" });
-</script>
+<script type="text/javascript" src="/media/scripts/audio.js"></script>
+<div class="bbplayer">
+   <span class="bb-play">
+      <svg viewBox="0 0 20 20" class="play">
+        <polygon fill="#666" points="3,1 19,10.2 3,19.5 "/>
+      </svg>
+      <svg viewBox="0 0 20 20" class="pause">
+        <rect fill="#666" x="2" y="2" width="6" height="16"/>
+        <rect fill="#666" x="12" y="2" width="6" height="16"/>
+      </svg>
+    </span>
+   <span class="bb-rewind"></span>
+   <span class="bb-forward"></span>
+   <span class="bb-trackTime"></span>
+   <span class="bb-trackLength"></span>
+   <span class="bb-trackTitle"></span>
+   <audio loop="false">
+     <source src="/media/audio/verse/Canto_V.mp3"/>
+   </audio>
+</div>
 
 
 <p>More than any other thing, it is our <em>priorities</em> <br />
