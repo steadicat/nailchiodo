@@ -1,5 +1,7 @@
 @charset "utf-8";
 
+html{color:#000;background:#FFF;}body,div,dl,dt,dd,ul,ol,li,h1,h2,h3,h4,h5,h6,pre,code,form,fieldset,legend,input,textarea,p,blockquote,th,td{margin:0;padding:0;}table{border-collapse:collapse;border-spacing:0;}fieldset,img{border:0;}address,caption,cite,code,dfn,em,strong,th,var{font-style:normal;font-weight:normal;}li{list-style:none;}caption,th{text-align:left;}h1,h2,h3,h4,h5,h6{font-size:100%;font-weight:normal;}q:before,q:after{content:'';}abbr,acronym{border:0;font-variant:normal;}sup{vertical-align:text-top;}sub{vertical-align:text-bottom;}input,textarea,select{font-family:inherit;font-size:inherit;font-weight:inherit;}input,textarea,select{*font-size:100%;}legend{color:#000;}del,ins{text-decoration:none;}
+
 a { text-decoration: none; }
 
 /* colours */
@@ -56,7 +58,7 @@ body { margin: 24px 10% 10% 30%; }
 #breadcrumbs { width: 26%; text-overflow: ellipsis; overflow: hidden; }
 #breadcrumbs .poems { list-style-type: none; margin-left: 24px; font-size: 16px; white-space: nowrap; }
 #breadcrumbs .current a { color: #000; }
-.arrow { /* font-weight: bold; */ font-size: 16px; line-height: 24px; width: 22px; float: left; margin-left: -24px; text-align: right; }
+.arrow { font-size: 16px; line-height: 24px; width: 22px; float: left; margin-left: -24px; text-align: right; }
 
 /* languages */
 #languages .current a { color: #000; }
@@ -65,7 +67,7 @@ body { margin: 24px 10% 10% 30%; }
 .highlighted>a { font-size: 150%; }
 
 /* notices */
-.notice { color: #069; /* font-weight: bold; */ padding: 12px 0px; width: 50%; }
+.notice { color: #069; padding: 12px 0px; width: 50%; }
 
 #description { font-size: 120%; padding: 12px 0px; }
 hr { display: none; }
@@ -99,4 +101,15 @@ hr { display: none; }
 }
 .bb-playing .pause {
   display: inline;
+}
+
+@media print {
+  body { margin: 24px 10% 10% 20%; }
+  #breadcrumbs, #languages, #next { display: none; }
+  .footnotes { margin-left: -10%; margin-top: 48px; }
+  .footnotes .footnoteReference { font-size: 12px; }
+  .footnotes li { display: block; margin-top: 1em; font-size: 12px; line-height: 20px }
+  .footnotes li.active { position: relative; top: 0; left: 0; width: auto; margin-top: 1em; }
+  .bbplayer { display: none; }
+
 }
