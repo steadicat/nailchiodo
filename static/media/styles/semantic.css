@@ -11,12 +11,13 @@ a:visited { color: #903; }
 #breadcrumbs a:visited:after, #languages a:visited:after, #meta a:visited:after { content:''; }
 
 /* typography */
-body { font: 18px/28px 'Alegreya', garamond, georgia, serif; }
-em { font-family: 'Alegreya', garamond, georgia, serif; font-style: italic; }
+body { font: 18px/28px 'Mate', garamond, georgia, serif; }
+em { font-family: 'Mate', garamond, georgia, serif; font-style: italic; }
 .footnotes, .home #teaser .footnotes { font-size: 16px; line-height: 28px }
 .footnoteReference { font-size: inherit; }
-.caps { font-family: 'Alegreya SC', garamond, georgia, serif; text-transform: lowercase; letter-spacing: 1px; }
+.caps { font-family: 'Mate SC', garamond, georgia, serif; text-transform: lowercase; letter-spacing: 1px; }
 p+p { text-indent: 28px; }
+p.first { text-indent: 0; }
 .right { text-align: right; }
 body.poem #text { white-space: nowrap; }
 .overline { text-decoration: overline; }
