@@ -8,6 +8,7 @@ import (
 	"google.golang.org/appengine/log"
 	"io/ioutil"
 	"net/http"
+	"os"
 	"strings"
 	"time"
 )
@@ -17,26 +18,42 @@ func init() {
 }
 
 func staticFileHandler(w http.ResponseWriter, r *http.Request) {
-	if r.URL.Path != "/" && strings.HasSuffix(r.URL.Path, "/") {
-		http.Redirect(w, r, strings.TrimSuffix(r.URL.Path, "/"), http.StatusMovedPermanently)
+	if strings.HasSuffix(r.Header.Get("Host"), ".nailchiodo.com") {
+		http.Redirect(w, r, "http://nailchiodo.com"+r.URL.RequestURI(), http.StatusMovedPermanently)
 		return
 	}
 
 	c := appengine.NewContext(r)
 	lang := getLanguage(w, r)
 
-	var filename string
-	if r.URL.Path == "/" {
-		filename = fmt.Sprintf("static/index.%s.html", lang)
+	trimmedPath := strings.Trim(r.URL.Path, "/")
+	branchName := fmt.Sprintf("static/%s/index.%s.html", trimmedPath, lang)
+	leafName := fmt.Sprintf("static/%s.%s.html", trimmedPath, lang)
+	var fileName string
+
+	if strings.HasSuffix(r.URL.Path, "/") {
+		_, err := os.Stat(leafName)
+		if err == nil {
+			log.Infof(c, "[http] %s exists, redirecting", leafName)
+			http.Redirect(w, r, "/"+trimmedPath, http.StatusMovedPermanently)
+			return
+		}
+		fileName = branchName
 	} else {
-		filename = fmt.Sprintf("static%s.%s.html", r.URL.Path, lang)
+		_, err := os.Stat(branchName)
+		if err == nil {
+			log.Infof(c, "[http] %s exists, redirecting", branchName)
+			http.Redirect(w, r, "/"+trimmedPath+"/", http.StatusMovedPermanently)
+			return
+		}
+		fileName = leafName
 	}
 
-	log.Infof(c, "[http] %s?lang=%s -> %s", r.URL.Path, lang, filename)
+	log.Infof(c, "[http] %s?lang=%s -> %s", r.URL.Path, lang, fileName)
 
-	file, err := ioutil.ReadFile(filename)
+	file, err := ioutil.ReadFile(fileName)
 	if err != nil {
-		log.Warningf(c, "[file error] %v", err)
+		log.Warningf(c, "[not found] %v", err)
 		notFoundHandler(c, w, r)
 		return
 	}
