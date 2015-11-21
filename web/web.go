@@ -8,7 +8,6 @@ import (
 	"google.golang.org/appengine/log"
 	"io/ioutil"
 	"net/http"
-	"os"
 	"strings"
 	"time"
 )
@@ -28,13 +27,9 @@ func staticFileHandler(w http.ResponseWriter, r *http.Request) {
 
 	var filename string
 	if r.URL.Path == "/" {
-		filename = fmt.Sprintf("static/index.html?lang=%s", lang)
+		filename = fmt.Sprintf("static/index.%s.html", lang)
 	} else {
-		filename = fmt.Sprintf("static%s?lang=%s", r.URL.Path, lang)
-		_, err := os.Stat(filename)
-		if err != nil {
-			filename = fmt.Sprintf("static%s/index.html?lang=%s", r.URL.Path, lang)
-		}
+		filename = fmt.Sprintf("static%s.%s.html", r.URL.Path, lang)
 	}
 
 	log.Infof(c, "[http] %s?lang=%s -> %s", r.URL.Path, lang, filename)
