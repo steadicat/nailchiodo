@@ -1,20 +1,22 @@
-package web
+package main
 
 import (
 	"fmt"
-	"golang.org/x/net/context"
-	"golang.org/x/text/language"
-	"google.golang.org/appengine"
-	"google.golang.org/appengine/log"
 	"io/ioutil"
+	"log"
 	"net/http"
 	"os"
 	"strings"
 	"time"
+
+	"golang.org/x/net/context"
+	"golang.org/x/text/language"
+	"google.golang.org/appengine"
 )
 
-func init() {
+func main() {
 	http.HandleFunc("/", staticFileHandler)
+	appengine.Main()
 }
 
 func staticFileHandler(w http.ResponseWriter, r *http.Request) {
@@ -34,7 +36,7 @@ func staticFileHandler(w http.ResponseWriter, r *http.Request) {
 	if strings.HasSuffix(r.URL.Path, "/") {
 		_, err := os.Stat(leafName)
 		if err == nil {
-			log.Infof(c, "[http] %s exists, redirecting", leafName)
+			log.Printf("[http] %s exists, redirecting", leafName)
 			http.Redirect(w, r, "/"+trimmedPath, http.StatusMovedPermanently)
 			return
 		}
@@ -42,18 +44,18 @@ func staticFileHandler(w http.ResponseWriter, r *http.Request) {
 	} else {
 		_, err := os.Stat(branchName)
 		if err == nil {
-			log.Infof(c, "[http] %s exists, redirecting", branchName)
+			log.Printf("[http] %s exists, redirecting", branchName)
 			http.Redirect(w, r, "/"+trimmedPath+"/", http.StatusMovedPermanently)
 			return
 		}
 		fileName = leafName
 	}
 
-	log.Infof(c, "[http] %s?lang=%s -> %s", r.URL.Path, lang, fileName)
+	log.Printf("[http] %s?lang=%s -> %s", r.URL.Path, lang, fileName)
 
 	file, err := ioutil.ReadFile(fileName)
 	if err != nil {
-		log.Warningf(c, "[not found] %v", err)
+		log.Printf("[not found] %v", err)
 		notFoundHandler(c, w, r)
 		return
 	}
@@ -68,7 +70,7 @@ func notFoundHandler(c context.Context, w http.ResponseWriter, r *http.Request) 
 	file, err := ioutil.ReadFile("static/notfound.html")
 	_, err = w.Write(file)
 	if err != nil {
-		log.Warningf(c, "[file error] %v", err)
+		log.Printf("[file error] %v", err)
 		fmt.Fprintf(w, "Error!")
 	}
 }

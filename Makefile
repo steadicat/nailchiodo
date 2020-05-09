@@ -1,7 +1,9 @@
+export CLOUDSDK_CORE_PROJECT=nail-chiodo
+
 dev:
-	goapp serve
+	go run main.go
 
 deploy:
-	goapp deploy
+	gcloud app deploy --no-promote
 
 .PHONY: dev deploy
