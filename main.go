@@ -1,6 +1,7 @@
 package main
 
 import (
+	"encoding/json"
 	"fmt"
 	"io/ioutil"
 	"log"
@@ -12,6 +13,7 @@ import (
 	"golang.org/x/net/context"
 	"golang.org/x/text/language"
 	"google.golang.org/appengine"
+	"google.golang.org/appengine/memcache"
 )
 
 func main() {
@@ -21,14 +23,25 @@ func main() {
 
 func staticFileHandler(w http.ResponseWriter, r *http.Request) {
 	if strings.HasSuffix(r.Header.Get("Host"), ".nailchiodo.com") {
-		http.Redirect(w, r, "http://nailchiodo.com"+r.URL.RequestURI(), http.StatusMovedPermanently)
+		http.Redirect(w, r, "https://nailchiodo.com"+r.URL.RequestURI(), http.StatusMovedPermanently)
 		return
 	}
 
 	c := appengine.NewContext(r)
 	lang := getLanguage(w, r)
-
 	trimmedPath := strings.Trim(r.URL.Path, "/")
+
+	redirects, err := getRedirects(c)
+	if err != nil {
+		log.Printf("[error getting redirects] %v", err)
+		errorHandler(c, w, r, lang)
+		return
+	}
+	if redirects[trimmedPath] != "" {
+		http.Redirect(w, r, redirects[trimmedPath], http.StatusMovedPermanently)
+		return
+	}
+
 	branchName := fmt.Sprintf("static/%s/index.%s.html", trimmedPath, lang)
 	leafName := fmt.Sprintf("static/%s.%s.html", trimmedPath, lang)
 	var fileName string
@@ -56,21 +69,36 @@ func staticFileHandler(w http.ResponseWriter, r *http.Request) {
 	file, err := ioutil.ReadFile(fileName)
 	if err != nil {
 		log.Printf("[not found] %v", err)
-		notFoundHandler(c, w, r)
+		notFoundHandler(c, w, r, lang)
 		return
 	}
 
 	w.Header().Set("Content-Type", "text/html; charset=utf-8")
 	_, err = w.Write(file)
+	if err != nil {
+		log.Printf("[error responding] %v", err)
+		errorHandler(c, w, r, lang)
+	}
 }
 
-func notFoundHandler(c context.Context, w http.ResponseWriter, r *http.Request) {
+func notFoundHandler(c context.Context, w http.ResponseWriter, r *http.Request, lang string) {
 	w.WriteHeader(http.StatusNotFound)
 	w.Header().Set("Content-Type", "text/html; charset=utf-8")
-	file, err := ioutil.ReadFile("static/notfound.html")
+	file, err := ioutil.ReadFile(fmt.Sprintf("static/notfound.%s.html", lang))
 	_, err = w.Write(file)
 	if err != nil {
 		log.Printf("[file error] %v", err)
+		errorHandler(c, w, r, lang)
+	}
+}
+
+func errorHandler(c context.Context, w http.ResponseWriter, r *http.Request, lang string) {
+	w.WriteHeader(http.StatusInternalServerError)
+	w.Header().Set("Content-Type", "text/html; charset=utf-8")
+	file, err := ioutil.ReadFile(fmt.Sprintf("static/error.%s.html", lang))
+	_, err = w.Write(file)
+	if err != nil {
+		log.Printf("[file error on error!] %v", err)
 		fmt.Fprintf(w, "Error!")
 	}
 }
@@ -128,4 +156,43 @@ func getLanguage(w http.ResponseWriter, r *http.Request) string {
 	}
 
 	return base.String()
+}
+
+func getRedirects(c context.Context) (map[string]string, error) {
+	var redirects map[string]string
+
+	_, err := memcache.JSON.Get(c, "redirects", &redirects)
+	if err == nil {
+		log.Print("[redirects] Cache hit")
+		return redirects, nil
+	}
+
+	if err != memcache.ErrCacheMiss {
+		log.Print("[redirects] Error reading from cache", err.Error())
+	} else {
+		log.Print("[redirects] Cache miss")
+	}
+
+	redirectsFile, err := os.Open("redirects.json")
+	if err != nil {
+		log.Print("[redirects] Error opening redirects file", err.Error())
+		return nil, err
+	}
+
+	jsonParser := json.NewDecoder(redirectsFile)
+	err = jsonParser.Decode(&redirects)
+	if err != nil {
+		log.Print("[redirects] Error parsing redirects file", err.Error())
+		return nil, err
+	}
+
+	err = memcache.JSON.Set(c, &memcache.Item{
+		Key:    "redirects",
+		Object: &redirects,
+	})
+	if err != nil {
+		log.Print("[redirects] Error storing in memcache", err.Error())
+	}
+
+	return redirects, nil
 }
