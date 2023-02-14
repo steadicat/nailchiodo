@@ -39,7 +39,15 @@ const languageNegotiation: PagesFunction = async ({ request, next, env }) => {
   } else {
     url.pathname = `${url.pathname}.${lang}.html`;
   }
-  return env.ASSETS.fetch(url)
+
+  if (!url.searchParams.get('lang')) {
+    return env.ASSETS.fetch(url);
+  }
+
+  const asset = await env.ASSETS.fetch(url);
+  const response = new Response(asset.body, asset)
+  response.headers.append("Set-Cookie", `lang=${lang}; path=/`);
+  return response;
 };
 
 export const onRequest = [languageNegotiation];
